@@ -104,20 +104,16 @@ func dedup(s []string) []string {
 // endingInTLD filters a string slice against a string slice of TLDs, only
 // returning strings thats ends in a valid TLD
 func endingInTLD(s []string) []string {
-	t := make(map[string]bool)
+	var l []string
 	for _, e := range s {
 		n := strings.Split(e, ".")
 		tl := strings.ToTitle(n[len(n)-1])
 		for _, tld := range tld {
 			if tld == tl {
-				t[e] = true
+				l = append(l, e)
 				break
 			}
 		}
-	}
-	var l []string
-	for k := range t {
-		l = append(l, k)
 	}
 
 	return l
