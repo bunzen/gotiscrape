@@ -55,24 +55,24 @@ func FindIPv6(body string) []string {
 	// retrieve a string slice of all words (between word boundries)
 	// that could possibly be a IPv6 string and validate them using
 	// package net
-	allpos := dedup(allposipv6.FindAllString(body, -1))
+	a := dedup(allposipv6.FindAllString(body, -1))
 
-	var ret []string
+	var result []string
 
-	for _, posipv6 := range allpos {
-		if ip := net.ParseIP(posipv6); ip != nil {
+	for _, p := range a {
+		if ip := net.ParseIP(p); ip != nil {
 			// since ip is ok and we know that ParseIP will
 			// return either an ipv4 OR an ipv6 adress and
 			// .To4() doc say "If ip is not an IPv4 address, To4 returns nil"
 			// we can assume that a .To4() returning nil will in effect mean
 			// .IsIPv6() == true
 			if ip.To4() == nil {
-				ret = append(ret, posipv6)
+				result = append(result, p)
 			}
 		}
 	}
 
-	return ret
+	return result
 }
 
 // FindEmail extracts all email like strings from a body of text and
@@ -107,7 +107,7 @@ func endingInTLD(s []string) []string {
 	var l []string
 	for _, e := range s {
 		n := strings.Split(e, ".")
-		tl := strings.ToTitle(n[len(n)-1])
+		tl := strings.ToLower(n[len(n)-1])
 		for _, tld := range tld {
 			if tld == tl {
 				l = append(l, e)
